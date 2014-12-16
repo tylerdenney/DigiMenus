@@ -9,4 +9,18 @@ public class cFoodItem extends iItem
 {
     List<String> commonallergies;
     String portionsize;
+
+    public cFoodItem(Double c, String n, String d, List<String> allergies)
+    {
+        super(c, n, d);
+        commonallergies.addAll(allergies);
+    }
+    public void SetPortionSize(String p)
+    {
+        portionsize = p;
+    }
+    public String GetPortionSize()
+    {
+        return portionsize;
+    }
 }
