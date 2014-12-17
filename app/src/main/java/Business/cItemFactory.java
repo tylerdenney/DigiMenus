@@ -15,7 +15,7 @@ public class cItemFactory
     public cItemFactory(Context c)
     {
         myDB = new cDB(c);
-        myDB.GetItem();
+        myDB.InsertItems(c);
     }
     private iItem CreateFood()
     {
