@@ -6,6 +6,7 @@ package Business;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Persist.cDB;
@@ -17,15 +18,17 @@ public class cItemFactory
         myDB = new cDB(c);
         myDB.InsertItems(c);
     }
+    public List<iItem> PopulateItems(Context c)
+    {
+        List<iItem> allitems = myDB.ImportMenuItems(c);
+
+        return null;
+    }
     private iItem CreateFood()
     {
         return null;
     }
     private iItem CreateDrink()
-    {
-        return null;
-    }
-    public List<iItem> PopulateItems()
     {
         return null;
     }

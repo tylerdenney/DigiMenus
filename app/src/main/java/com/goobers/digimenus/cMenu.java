@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import Business.cItemFactory;
 import Business.iItem;
@@ -34,6 +35,8 @@ public class cMenu extends Fragment
         //send context in onAttach, because if send before it could send null.
         super.onAttach(activity);
         itemfactory = new cItemFactory(activity);
+        items = new ArrayList<iItem>();
+        PopulateItems();
 
     }
 
@@ -45,7 +48,10 @@ public class cMenu extends Fragment
     }
     public void PopulateItems()
     {
-
+        if(items.size() == 0)
+        {
+            itemfactory.PopulateItems(getActivity());
+        }
     }
 
     public void ListenToHost()

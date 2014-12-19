@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.Contacts;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import Business.cFoodItem;
@@ -18,18 +19,18 @@ import Business.iItem;
  */
 public class cDB extends SQLiteOpenHelper
 {
-    String CreateTableITEMS = "CREATE TABLE Items ( " +
+    private final static String CreateTableITEMS = "CREATE TABLE Items ( " +
                                                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                     "Name TEXT, " +
                                                     "Description TEXT, " +
                                                     "Cost REAL, " +
                                                     "FoodItem INTEGER );";
 
-    String CreateTableALLERGIES = "CREATE TABLE Allergies ( " +
+    private static final String CreateTableALLERGIES = "CREATE TABLE Allergies ( " +
                                                             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                             "Ingredient TEXT )";
 
-    String CreateTableITEMS_ALLERGIES = "CREATE TABLE Items_Allergies ( " +
+    private static final String CreateTableITEMS_ALLERGIES = "CREATE TABLE Items_Allergies ( " +
                                                                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                                         "ItemID INTEGER, " +
                                                                         "AllergyID INTEGER, " +
@@ -40,14 +41,71 @@ public class cDB extends SQLiteOpenHelper
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "MenuDB.db";
+    //Items
+    private static final String TABLE_ITEMS = "Items";
+    private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "Name";
+    private static final String KEY_DESC = "Description";
+    private static final String KEY_COST = "Cost";
+    private static final String KEY_FOODITEM = "FoodItem";
+    //Allergies
+    private static final String TABLE_ALLERGIES = "Allergies";
+    private static final String KEY_INGREDIENT = "Ingredient";
+    //Items_Allergies
+    private static final String TABLE_ITEMS_ALLERGIES = "Items_Allergies";
+    private static final String KEY_ALLERGYID = "AllergyID";
+    private static final String KEY_ITEMID = "ItemID";
 
     public cDB(Context c)
     {
         super(c, DATABASE_NAME, null, DATABASE_VERSION);
     }
-    public List<iItem> ImportMenuItems()
+    public List<iItem> ImportMenuItems(Context c)
     {
-        String selectquery = "select Name, Ingredient FROM Items JOIN Allergies on items.id = items_Allergies.itemID join items_Allergies on allergies.id = items_Allergies.allergyID";
+        String[] columns = {KEY_NAME, KEY_DESC, KEY_COST};
+        String selectqueryfoodallergies = "select Name, Ingredient FROM Items JOIN Allergies on items.id = items_Allergies.itemID join items_Allergies on allergies.id = items_Allergies.allergyID where items.foodItem = 1;";
+        String selectqueryfooddetails = "SELECT Description, Cost FROM Items WHERE Name = ";
+        String selectquerydrinks = "SELECT * FROM Items WHERE FoodItem = 0";
+        List<iItem> items = new ArrayList<iItem>();
+        //List<iItem> drinkitems = new ArrayList<iItem>();
+        File database = c.getDatabasePath("MenuDB.db");
+
+        if(database.exists())
+        {
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            //Find all food items.
+            Cursor foodcursor = db.rawQuery(selectqueryfoodallergies, null);
+            if(foodcursor.moveToFirst())
+            {
+                while(foodcursor.isAfterLast() == false)
+                {
+                    List<String> allergies = new ArrayList<String>();
+                    String name = foodcursor.getString(foodcursor.getColumnIndex(KEY_NAME));
+                    //while cursor is on same food item, fill allergies list with ingredients specific to the current food
+                    while (foodcursor.getString(foodcursor.getColumnIndex(KEY_NAME)).equals(name) && foodcursor.isAfterLast() == false)
+                    {
+                        allergies.add(foodcursor.getString(foodcursor.getColumnIndex(KEY_INGREDIENT)));
+                        foodcursor.moveToNext();
+                    }
+                    //Values in db arent being edited, so sql injection risk is low?
+                    //  Cursor detailscursor = db.rawQuery(selectqueryfooddetails + name, null);
+                    Cursor detailscursor = db.query(TABLE_ITEMS, columns, "Name=?", new String[]{name}, null, null, null);
+                    if (detailscursor.moveToFirst())
+                    {
+                        String desc = detailscursor.getString(detailscursor.getColumnIndex(KEY_DESC));
+                        Double cost = detailscursor.getDouble(detailscursor.getColumnIndex(KEY_COST));
+                        cFoodItem newitem = new cFoodItem(cost, name, desc, allergies);
+                        items.add(newitem);
+                    }
+                }
+            }
+            //Find all drink items.
+            Cursor drinkcursor = db.rawQuery(selectquerydrinks, null);
+            //while(drinkcursor)
+        }
+
+
         return null;
     }
 
@@ -65,24 +123,9 @@ public class cDB extends SQLiteOpenHelper
     {
         db.execSQL("DROP TABLE IF EXISTS Items");
         db.execSQL("DROP TABLE IF EXISTS Allergies");
+        db.execSQL("DROP TABLE IF EXISTS Items_Allergies");
         this.onCreate(db);
     }
-
-    //Items
-    private static final String TABLE_ITEMS = "Items";
-    private static final String KEY_ID = "id";
-    private static final String KEY_NAME = "Name";
-    private static final String KEY_DESC = "Description";
-    private static final String KEY_COST = "Cost";
-    private static final String KEY_FOODITEM = "FoodItem";
-    //Allergies
-    private static final String TABLE_ALLERGIES = "Allergies";
-    private static final String KEY_INGREDIENT = "Ingredient";
-    //Items_Allergies
-    private static final String TABLE_ITEMS_ALLERGIES = "Items_Allergies";
-    private static final String KEY_ALLERGYID = "AllergyID";
-    private static final String KEY_ITEMID = "ItemID";
-
     //This will fill the database if it does not exist.
     //Otherwise it will do nothing.
     public void InsertItems(Context c)
@@ -163,6 +206,10 @@ public class cDB extends SQLiteOpenHelper
             a6.put(KEY_INGREDIENT, "Fish");
             db.insert(TABLE_ALLERGIES, null, a6);
 
+            ContentValues a7 = new ContentValues();
+            a7.put(KEY_INGREDIENT, "None");
+            db.insert(TABLE_ALLERGIES, null, a7);
+
             ContentValues ia1 = new ContentValues();
             ia1.put(KEY_ITEMID, 1);
             ia1.put(KEY_ALLERGYID, 5);
@@ -182,6 +229,12 @@ public class cDB extends SQLiteOpenHelper
             ia4.put(KEY_ITEMID, 7);
             ia4.put(KEY_ALLERGYID, 6);
             db.insert(TABLE_ITEMS_ALLERGIES, null, ia4);
+
+            ContentValues ia5 = new ContentValues();
+            ia5.put(KEY_ITEMID, 3);
+            ia5.put(KEY_ALLERGYID, 7);
+            db.insert(TABLE_ITEMS_ALLERGIES, null, ia5);
+
 
             db.close();
         }
