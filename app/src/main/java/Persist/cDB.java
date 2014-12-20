@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import Business.cDrinkItem;
 import Business.cFoodItem;
 import Business.iItem;
 
@@ -83,7 +84,7 @@ public class cDB extends SQLiteOpenHelper
                     List<String> allergies = new ArrayList<String>();
                     String name = foodcursor.getString(foodcursor.getColumnIndex(KEY_NAME));
                     //while cursor is on same food item, fill allergies list with ingredients specific to the current food
-                    while (foodcursor.getString(foodcursor.getColumnIndex(KEY_NAME)).equals(name) && foodcursor.isAfterLast() == false)
+                    while (foodcursor.isAfterLast() == false && foodcursor.getString(foodcursor.getColumnIndex(KEY_NAME)).equals(name))
                     {
                         allergies.add(foodcursor.getString(foodcursor.getColumnIndex(KEY_INGREDIENT)));
                         foodcursor.moveToNext();
@@ -102,11 +103,19 @@ public class cDB extends SQLiteOpenHelper
             }
             //Find all drink items.
             Cursor drinkcursor = db.rawQuery(selectquerydrinks, null);
-            //while(drinkcursor)
+            if(drinkcursor.moveToFirst())
+            {
+                while (drinkcursor.isAfterLast() == false) {
+                    String desc = drinkcursor.getString(drinkcursor.getColumnIndex(KEY_DESC));
+                    Double cost = drinkcursor.getDouble(drinkcursor.getColumnIndex(KEY_COST));
+                    String name = drinkcursor.getString(drinkcursor.getColumnIndex(KEY_NAME));
+                    cDrinkItem newitem = new cDrinkItem(cost, name, desc);
+                    items.add(newitem);
+                    drinkcursor.moveToNext();
+                }
+            }
         }
-
-
-        return null;
+        return items;
     }
 
     @Override
