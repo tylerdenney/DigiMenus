@@ -6,12 +6,15 @@ package Business;
 
 import android.content.Context;
 
+import com.goobers.digimenus.cMenu;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import Persist.cDB;
 public class cItemFactory
 {
+    final int MAX_ITEMS = 7;
     cDB myDB;
     public cItemFactory(Context c)
     {
@@ -21,8 +24,10 @@ public class cItemFactory
     public List<iItem> PopulateItems(Context c)
     {
         List<iItem> allitems = myDB.ImportMenuItems(c);
-
-        return null;
+        if(allitems.size() == cMenu.MAX_ITEMS)
+            return allitems;
+        else
+            return null;
     }
     private iItem CreateFood()
     {

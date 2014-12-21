@@ -1,6 +1,8 @@
 package com.goobers.digimenus;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import Business.cOrder;
  */
 public class cMenu extends Fragment
 {
+    public final static int MAX_ITEMS = 7;
+
     cItemFactory itemfactory;
     List<iItem> items;
     cOrder order;
@@ -39,6 +43,12 @@ public class cMenu extends Fragment
         PopulateItems();
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode,data);
+
+    }
 
 
 
@@ -50,7 +60,21 @@ public class cMenu extends Fragment
     {
         if(items.size() == 0)
         {
-            itemfactory.PopulateItems(getActivity());
+            items = itemfactory.PopulateItems(getActivity());
+        }
+        if(items.size() == MAX_ITEMS)
+        {
+
+        }
+        else
+        {
+            PopupFragment box = new PopupFragment();
+            Bundle args = new Bundle();
+            args.putString("title", "Error ");
+            args.putString("message", "Populating Menu from DB Failed");
+            box.setArguments(args);
+            box.setTargetFragment(this, 0); //return to this fragment.
+            box.show(getFragmentManager(), "dialog");
         }
     }
 

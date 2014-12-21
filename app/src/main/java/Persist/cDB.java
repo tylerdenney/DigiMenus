@@ -100,6 +100,7 @@ public class cDB extends SQLiteOpenHelper
                         items.add(newitem);
                     }
                 }
+                foodcursor.close();
             }
             //Find all drink items.
             Cursor drinkcursor = db.rawQuery(selectquerydrinks, null);
@@ -114,7 +115,10 @@ public class cDB extends SQLiteOpenHelper
                     drinkcursor.moveToNext();
                 }
             }
+            drinkcursor.close();
+            db.close();
         }
+
         return items;
     }
 
