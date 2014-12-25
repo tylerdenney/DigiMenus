@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import Business.cItemFactory;
 import Business.iItem;
@@ -22,7 +23,7 @@ public class cMenu extends Fragment
     public final static int MAX_ITEMS = 7;
 
     cItemFactory itemfactory;
-    List<iItem> items;
+    static List<iItem> items;
     cOrder order;
     public cMenu()
     {
@@ -77,6 +78,26 @@ public class cMenu extends Fragment
             box.setTargetFragment(this, 0); //return to this fragment.
             box.show(getFragmentManager(), "dialog");
         }
+    }
+    public static List<iItem> GetFoodItems()
+    {
+        List<iItem> fooditems = new ArrayList<iItem>();
+        for(iItem i : items)
+        {
+            if(i.getClass().toString().equals("class Business.cFoodItem"))
+                fooditems.add(i);
+        }
+        return fooditems;
+    }
+    public static List<iItem> GetDrinkItems()
+    {
+        List<iItem> fooditems = new ArrayList<iItem>();
+        for(iItem i : items)
+        {
+            if(i.getClass().toString().equals("class Business.cDrinkItem"))
+                fooditems.add(i);
+        }
+        return fooditems;
     }
 
     public void ListenToHost()
