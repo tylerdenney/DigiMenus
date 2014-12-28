@@ -43,6 +43,17 @@ public class cFoodMenuFragment extends ListFragment
         ListAdapter list_adapter = new ArrayAdapter<String>(getActivity(),R.layout.simple_text_layout,foodnames);
         setListAdapter(list_adapter);
     }
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
+        cMenu.SelectFoodItemOnClick(position);
+    }
+    //TODO Add long click to view item.
+    //@Override
+    //public void onListItemLongClick(ListView l, View v, int position, long id)
+    //{
+
+    //}
 
     @Override
     public void onDestroy()

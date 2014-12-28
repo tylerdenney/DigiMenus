@@ -22,9 +22,9 @@ public class cMenu extends Fragment
 {
     public final static int MAX_ITEMS = 7;
 
-    cItemFactory itemfactory;
+    static cItemFactory itemfactory;
     static List<iItem> items;
-    cOrder order;
+    static cOrder order;
     public cMenu()
     {
     }
@@ -42,6 +42,7 @@ public class cMenu extends Fragment
         super.onAttach(activity);
         itemfactory = new cItemFactory(activity);
         items = new ArrayList<iItem>();
+        order = new cOrder();
         PopulateItems();
 
     }
@@ -98,6 +99,14 @@ public class cMenu extends Fragment
                 fooditems.add(i);
         }
         return fooditems;
+    }
+    public static void SelectFoodItemOnClick(int pos)
+    {
+        order.AddItem(items.get(pos));
+    }
+    public static List<iItem> GetOrderedItems()
+    {
+        return order.GetItems();
     }
 
     public void ListenToHost()

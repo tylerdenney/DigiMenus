@@ -1,5 +1,8 @@
 package Business;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 /**
@@ -7,20 +10,40 @@ import java.util.List;
  */
 public class cOrder
 {
+    final int MAX_ITEMS = 20;
     Date date;
-    List<iItem> orderitems;
+    List<iItem> orderitems = null;
     int partysize;
     int tablenum;
     double totalcost;
 
-    public void AddItem(iItem item)
+    public cOrder()
     {
-
+        orderitems = new ArrayList<>();
     }
 
-    public void CalculateCost()
+    public void AddItem(iItem item)
     {
+        int oldsize = orderitems.size();
+        if(oldsize != MAX_ITEMS)
+        {
+            orderitems.add(item);
+            if(oldsize == orderitems.size() - 1) //item successfully added.
+                CalculateCost();
+        }
+    }
 
+    private void CalculateCost()
+    {
+        if(totalcost >= 0)
+        {
+            for (iItem i : orderitems)
+            {
+                totalcost += i.GetCost();
+            }
+        }
+        if(totalcost >= 0)
+            Log.d("e", "Cost updated successfully");
     }
     public boolean Cancel()
     {
@@ -50,6 +73,10 @@ public class cOrder
     public void ViewOrder()
     {
 
+    }
+    public List<iItem> GetItems()
+    {
+        return orderitems;
     }
 
 }
