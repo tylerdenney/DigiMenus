@@ -20,6 +20,7 @@ import Business.cOrder;
  */
 public class cMenu extends Fragment
 {
+    //lets see if this shows up.
     public final static int MAX_ITEMS = 7;
 
     static cItemFactory itemfactory;
