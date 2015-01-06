@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import Business.cFoodItem;
 import Business.cItemFactory;
 import Business.iItem;
 import Business.cOrder;
@@ -101,9 +103,31 @@ public class cMenu extends Fragment
         }
         return fooditems;
     }
-    public static void SelectFoodItemOnClick(int pos)
+    public static void SelectItemOnClick(String itemname)
     {
-        order.AddItem(items.get(pos));
+        boolean cont = true;
+        Iterator<iItem> i = items.iterator();
+        while(cont == true)
+        {
+            if(i.hasNext())
+            {
+                iItem c = i.next();
+                if(c.GetName().equals(itemname))
+                {
+                    order.AddItem(c);
+                    cont = false;
+                }
+            }
+
+        }
+    }
+    public static void RemoveItemOnClick(String itemname)
+    {
+        //create shell item to remove with the same name;
+        //iItem removeme = new cFoodItem(null,itemname,null,null);
+        order.RemoveItem(itemname);
+
+        //order.RemoveItem
     }
     public static List<iItem> GetOrderedItems()
     {

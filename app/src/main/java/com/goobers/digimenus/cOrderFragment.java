@@ -2,9 +2,13 @@ package com.goobers.digimenus;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -19,12 +23,13 @@ import Business.iItem;
  */
 public class cOrderFragment extends Fragment
 {
-    public ListView myitems;
+    private ListView myitems;
+    private ArrayAdapter list_adapter;
+    private ArrayList<String> foodnames;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_order, container, false);
-
         return rootView;
     }
 
@@ -36,14 +41,40 @@ public class cOrderFragment extends Fragment
         List<iItem> items = cMenu.GetOrderedItems();
         if(items != null)
         {
-            List<String> foodnames = new ArrayList<String>();
+            foodnames = new ArrayList<String>();
             for (iItem i : items)
             {
                 foodnames.add(i.GetName());
             }
-            ListAdapter list_adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_text_layout, foodnames);
+            list_adapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_text_layout, foodnames);
             myitems.setAdapter(list_adapter);
         }
+        registerForContextMenu(myitems);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.listView) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle("Options");
+            String[] menuItems = getResources().getStringArray(R.array.context_menu_array);
+            for (int i = 0; i<menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        String itemname = myitems.getAdapter().getItem(info.position).toString();
+        cMenu.RemoveItemOnClick(itemname);
+        foodnames.remove(info.position);
+        list_adapter.notifyDataSetChanged();
+        return true;
     }
 
 }

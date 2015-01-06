@@ -31,7 +31,16 @@ public class MainActivity extends ActionBarActivity
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer_listview = (ListView) findViewById(R.id.left_drawer);
         drawer_items = getResources().getStringArray(R.array.nav_items);
-        drawer_listview.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_text_layout, drawer_items));
+
+        DrawerItem[] draweritems = new DrawerItem[3];
+        draweritems[0] = new DrawerItem(R.drawable.foodicon, "Food");
+        draweritems[1] = new DrawerItem(R.drawable.drinkicon, "Drink");
+        draweritems[2] = new DrawerItem(R.drawable.placeholdericon, "Order");
+
+        DrawerCustomAdapter adapter = new DrawerCustomAdapter(this, R.layout.drawer_item_layout,draweritems);
+        drawer_listview.setAdapter(adapter);
+
+        //drawer_listview.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_text_layout, drawer_items));
         drawer_listview.setOnItemClickListener(new DrawerOnClickListener());
         if (savedInstanceState == null)
         {
@@ -101,6 +110,7 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.action_bar_container, frag).commit();
                 drawer_listview.setItemChecked(position, true);
                 drawer_listview.setSelection(position);
+                drawer_layout.closeDrawer(drawer_listview);
 //                getActionBar().setTitle(drawer_items[position]);
             }
         }

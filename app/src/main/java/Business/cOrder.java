@@ -50,9 +50,25 @@ public class cOrder
         return false;
     }
 
-    public void RemoveItem(iItem item)
+    public void RemoveItem(String itemname)
     {
+        boolean cont = true;
+        int oldsize = orderitems.size();
+        if(orderitems.size() != 0) {
+            for (int i = 0; i < orderitems.size() && cont == true; ++i)
+            {
+                if(orderitems.get(i).GetName().equals(itemname))
+                {
+                    cont = false;
+                    orderitems.remove(i);
+                    CalculateCost();
+                }
 
+
+            }
+        }
+        if(!(orderitems.size() == oldsize - 1))
+            Log.d("e", "Item not removed correctly");
     }
 
     public void Reset()

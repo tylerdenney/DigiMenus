@@ -44,6 +44,13 @@ public class cBeverageMenuFragment extends ListFragment
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
+        String itemname = (String) menu_list.getItemAtPosition(position);
+        cMenu.SelectItemOnClick(itemname);
+    }
+
+    @Override
     public void onDestroy()
     {
         super.onDestroy();

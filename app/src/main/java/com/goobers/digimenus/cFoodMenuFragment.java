@@ -46,7 +46,8 @@ public class cFoodMenuFragment extends ListFragment
     @Override
     public void onListItemClick(ListView l, View v, int position, long id)
     {
-        cMenu.SelectFoodItemOnClick(position);
+        String itemname = (String) menu_list.getItemAtPosition(position);
+        cMenu.SelectItemOnClick(itemname);
     }
     //TODO Add long click to view item.
     //@Override
