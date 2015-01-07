@@ -3,6 +3,7 @@ package com.goobers.digimenus;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +22,21 @@ import Business.iItem;
 public class cFoodMenuFragment extends ListFragment
 {
     ListView menu_list = null;
+    public cFoodMenuFragment()
+    {}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionbar_food);
+
         return rootView;
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
+        ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionbar_food);
         menu_list = getListView();
         List<iItem> items = cMenu.GetFoodItems();
         List<String> foodnames = new ArrayList<String>();

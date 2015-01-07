@@ -9,7 +9,9 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="option_header">Options</string>
-
+    <string name="actionbar_food">Food</string>
+    <string name="actionbar_drink">Drink</string>
+    <string name="actionbar_order">My Order</string>
     <string-array name="context_menu_array">
         <item>Remove from Order</item>
     </string-array>
