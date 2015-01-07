@@ -15,6 +15,7 @@
 
     <TextView
         android:id="@+id/textViewName"
+        android:gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -22,6 +23,7 @@
         android:paddingRight="10dp"
         android:text="Folder name here."
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="#111111" />
+        android:textColor="#111111"
+        />
 
 </RelativeLayout>

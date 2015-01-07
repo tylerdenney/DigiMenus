@@ -2,11 +2,15 @@ package com.goobers.digimenus;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +27,12 @@ public class MainActivity extends ActionBarActivity
     private String[] drawer_items;
     private DrawerLayout drawer_layout;
     private ListView drawer_listview;
+    private ActionBarDrawerToggle drawer_toggle;
+
+
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -31,6 +41,7 @@ public class MainActivity extends ActionBarActivity
         drawer_layout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer_listview = (ListView) findViewById(R.id.left_drawer);
         drawer_items = getResources().getStringArray(R.array.nav_items);
+
 
         DrawerItem[] draweritems = new DrawerItem[3];
         draweritems[0] = new DrawerItem(R.drawable.foodicon, "Food");
@@ -48,9 +59,63 @@ public class MainActivity extends ActionBarActivity
                     .add(R.id.action_bar_container, new cMenu())
                     .commit();
         }
+
+        //Testing
+        mTitle = mDrawerTitle = getTitle();
+        drawer_layout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        drawer_toggle = new ActionBarDrawerToggle(this, drawer_layout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close)
+        {
+          public void onDrawerClosed(View view)
+          {
+              getSupportActionBar().setTitle(mTitle);
+              invalidateOptionsMenu();
+          }
+            public void onDrawerOpened(View drawerview)
+            {
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
+            }
+        };
+
+        drawer_layout.setDrawerListener(drawer_toggle);
+
+
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer_toggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        drawer_toggle.onConfigurationChanged(newConfig);
     }
 
 
+    @Override
+    public void setTitle(CharSequence title)
+    {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        //boolean drawerOpen = drawer_layout.isDrawerOpen(drawer_listview);
+        //menu.findItem(R.id.action_bar).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+//end testing
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
@@ -107,11 +172,11 @@ public class MainActivity extends ActionBarActivity
             }
             if(frag != null)
             {
-                getSupportFragmentManager().beginTransaction().replace(R.id.action_bar_container, frag).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, frag).commit();
                 drawer_listview.setItemChecked(position, true);
                 drawer_listview.setSelection(position);
                 drawer_layout.closeDrawer(drawer_listview);
-//                getActionBar().setTitle(drawer_items[position]);
+                getSupportActionBar().setTitle(drawer_items[position]);
             }
         }
     }
