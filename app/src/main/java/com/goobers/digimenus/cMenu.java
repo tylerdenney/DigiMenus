@@ -2,6 +2,7 @@ package com.goobers.digimenus;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -129,6 +130,31 @@ public class cMenu extends Fragment
 
         //order.RemoveItem
     }
+    public static void SetPartySizeOnClick(int size)
+    {
+        if(size > 0)
+            order.SetPartySize(size);
+
+    }
+    public static void SetTableNumOnClick(int num)
+    {
+        if(num > 0)
+            order.SetTableNumber(num);
+    }
+    public static int GetTableNum()
+    {
+        return order.GetTableNumber();
+    }
+    public static int GetPartySize()
+    {
+        return order.GetPartySize();
+    }
+    public static double GetCost()
+    {
+        return order.GetTotalCost();
+    }
+
+
     public static List<iItem> GetOrderedItems()
     {
         return order.GetItems();

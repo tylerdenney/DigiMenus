@@ -18,18 +18,18 @@
         android:layout_height="wrap_content">
 
         <TextView
-            
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Table Number: "
+            android:text=""
             android:id="@+id/txttablenum"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Party Size: "
+            android:text=""
             android:id="@+id/txtpartysize"
             android:layout_below="@+id/txttablenum"
             android:layout_alignLeft="@+id/txttotalcost"
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Total Cost: "
+            android:text=""
             android:id="@+id/txttotalcost"
             android:layout_below="@+id/txtpartysize"
             android:layout_alignParentLeft="true"

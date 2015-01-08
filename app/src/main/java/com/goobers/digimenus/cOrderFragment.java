@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,10 @@ public class cOrderFragment extends Fragment
     private ListView myitems;
     private ArrayAdapter list_adapter;
     private ArrayList<String> foodnames;
+
+    private TextView txtparty;
+    private TextView txttable;
+    private TextView txtcost;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -50,6 +55,14 @@ public class cOrderFragment extends Fragment
             myitems.setAdapter(list_adapter);
         }
         registerForContextMenu(myitems);
+        txtparty =(TextView)getActivity().findViewById(R.id.txtpartysize);
+        txttable =(TextView)getActivity().findViewById(R.id.txttablenum);
+        txtcost =(TextView)getActivity().findViewById(R.id.txttotalcost);
+
+        txtcost.setText(getString(R.string.total_cost) + String.valueOf(cMenu.GetCost()));
+        txttable.setText(getString(R.string.table_num) + String.valueOf(cMenu.GetTableNum()));
+        txtparty.setText(getString(R.string.party_size) + String.valueOf(cMenu.GetPartySize()));
+
 
     }
 
@@ -74,6 +87,8 @@ public class cOrderFragment extends Fragment
         cMenu.RemoveItemOnClick(itemname);
         foodnames.remove(info.position);
         list_adapter.notifyDataSetChanged();
+        txtcost.setText(getString(R.string.total_cost) + String.valueOf(cMenu.GetCost()));
+
         return true;
     }
 

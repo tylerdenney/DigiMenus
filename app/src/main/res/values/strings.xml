@@ -12,6 +12,9 @@
     <string name="actionbar_food">Food</string>
     <string name="actionbar_drink">Drink</string>
     <string name="actionbar_order">My Order</string>
+    <string name="table_num">Table Number: </string>
+    <string name="party_size">Party Size: </string>
+    <string name="total_cost">Total Cost: $ </string>
     <string-array name="context_menu_array">
         <item>Remove from Order</item>
     </string-array>

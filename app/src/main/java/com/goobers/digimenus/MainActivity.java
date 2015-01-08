@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends ActionBarActivity implements PopupFragment.EditDialogListener
 {
     private String[] drawer_items;
     private DrawerLayout drawer_layout;
@@ -32,6 +32,8 @@ public class MainActivity extends ActionBarActivity
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    //1 for editing partysize, 2 for editing tablenum
+    private int editing = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -120,6 +122,7 @@ public class MainActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -135,18 +138,57 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
+
 
         if (drawer_toggle.onOptionsItemSelected(item)) {
             return true;
         }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        switch(item.getItemId())
+        {
+            case R.id.action_party:
+                editing = 1;
+                SetPartySizeOnClick();
+                return true;
+            case R.id.action_table:
+                editing = 2;
+                SetTableNumOnClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
     }
+    public void SetTableNumOnClick()
+    {
+        PopupFragment box = new PopupFragment();
+        Bundle args = new Bundle();
+        args.putString("title", "Table Number");
+        args.putString("message", "Please Enter the table number your party is seated at.");
+        box.setArguments(args);
+        box.show(getSupportFragmentManager(), "dialog");
+    }
+    public void SetPartySizeOnClick()
+    {
+        PopupFragment box = new PopupFragment();
+        Bundle args = new Bundle();
+        args.putString("title", "Party Size ");
+        args.putString("message", "Please enter your party's size.");
+        box.setArguments(args);
+        box.show(getSupportFragmentManager(), "dialog");
+    }
+
+    public void onFinishEditDialog(int input)
+    {
+        if(editing == 1)
+        cMenu.SetPartySizeOnClick(input);
+        if(editing == 2)
+            cMenu.SetTableNumOnClick(input);
+    }
+
+
 
     //subclass for the navigation drawer's onclick event.
     public class DrawerOnClickListener implements ListView.OnItemClickListener

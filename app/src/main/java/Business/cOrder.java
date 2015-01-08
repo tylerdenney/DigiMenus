@@ -20,6 +20,9 @@ public class cOrder
     public cOrder()
     {
         orderitems = new ArrayList<>();
+        partysize = 0;
+        tablenum = 0;
+        totalcost = 0;
     }
 
     public void AddItem(iItem item)
@@ -35,13 +38,12 @@ public class cOrder
 
     private void CalculateCost()
     {
-        if(totalcost >= 0)
+        totalcost = 0;
+        for (iItem i : orderitems)
         {
-            for (iItem i : orderitems)
-            {
-                totalcost += i.GetCost();
-            }
+            totalcost += i.GetCost();
         }
+
         if(totalcost >= 0)
             Log.d("e", "Cost updated successfully");
     }
@@ -69,6 +71,28 @@ public class cOrder
         }
         if(!(orderitems.size() == oldsize - 1))
             Log.d("e", "Item not removed correctly");
+    }
+    public void SetPartySize(int size)
+    {
+        if(size > 0)
+            partysize = size;
+    }
+    public void SetTableNumber(int num)
+    {
+        if(num > 0)
+            tablenum = num;
+    }
+    public int GetTableNumber()
+    {
+        return tablenum;
+    }
+    public int GetPartySize()
+    {
+        return partysize;
+    }
+    public double GetTotalCost()
+    {
+        return totalcost;
     }
 
     public void Reset()
