@@ -100,7 +100,7 @@ public class cOrder
 
     }
 
-    public void SendReqeust()
+    public void SendRequest()
     {
 
     }

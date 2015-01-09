@@ -1,7 +1,10 @@
 package com.goobers.digimenus;
 
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,10 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +36,9 @@ import Business.iItem;
 /**
  * Created by tyler on 12/23/2014.
  */
-public class cOrderFragment extends Fragment
+public class cOrderFragment extends Fragment implements View.OnClickListener
 {
+    Button requestbutton;
     private ListView myitems;
     private ArrayAdapter list_adapter;
     private ArrayList<String> foodnames;
@@ -35,7 +50,21 @@ public class cOrderFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_order, container, false);
+        requestbutton = (Button) rootView.findViewById(R.id.requestbutton);
+        requestbutton.setOnClickListener(this);
         return rootView;
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch(v.getId())
+        {
+            case R.id.requestbutton:
+                SendRealRequest r = new SendRealRequest();
+                r.execute();
+                break;
+        }
     }
 
     @Override
@@ -90,6 +119,91 @@ public class cOrderFragment extends Fragment
         txtcost.setText(getString(R.string.total_cost) + String.valueOf(cMenu.GetCost()));
 
         return true;
+    }
+
+    private static class SendRealRequest extends AsyncTask<String, byte[], Boolean>
+    {
+        Socket socket;
+        InputStream is;
+        OutputStream os;
+        BufferedReader bio;
+        BufferedWriter bwo;
+        protected Boolean doInBackground(String... args)
+        {
+            boolean result = false;
+            try
+            {
+                SocketAddress address = new InetSocketAddress("192.168.1.2", 4444);
+                socket = new Socket();
+                socket.connect(address, 5000);
+                if(socket.isConnected())
+                {
+
+                    bio = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    bwo = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    bwo.write("Hello");
+                    bwo.flush();
+
+                   // is = socket.getInputStream();
+                   //os = socket.getOutputStream();
+                   //byte[] buffer = new byte[256];
+
+                    String incoming = "";
+                    boolean b = false;
+                    //int read = is.read(buffer, 0, 1);
+                    while(!b)
+                    {
+                        incoming = bio.readLine();
+                        if(incoming != "")
+                            b = true;
+                        //byte[] tempdata = new byte[read];
+                       // System.arraycopy(buffer, 0, tempd ata, 0, read);
+                       // publishProgress(tempdata);
+                        //Log.i("AsyncTask", "doInBackground: Got some data");
+                        //read = is.read(buffer, 0, 4096);
+                    }
+                }
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+                Log.i("AsyncTask", "doInBackground: IOException");
+                result = true;
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                Log.i("AsyncTask", "doInBackground: Exception");
+                result = true;
+            }
+
+            finally
+            {
+                try
+                {
+                    is.close();
+                    os.close();
+                    socket.close();
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            return result;
+        }
+
+        protected void onProgressUpdate(byte[]... values)
+        {
+            if(values.length > 0)
+            {
+
+            }
+        }
     }
 
 }

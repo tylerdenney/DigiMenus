@@ -44,6 +44,15 @@
             android:layout_below="@+id/txtpartysize"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
     </RelativeLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Request"
+        android:id="@+id/requestbutton"
+        android:layout_gravity="bottom" />
 
 </LinearLayout>
