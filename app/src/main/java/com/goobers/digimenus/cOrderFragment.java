@@ -1,6 +1,5 @@
 package com.goobers.digimenus;
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -42,6 +40,7 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
     private ListView myitems;
     private ArrayAdapter list_adapter;
     private ArrayList<String> foodnames;
+    private List<iItem> _items;
 
     private TextView txtparty;
     private TextView txttable;
@@ -64,6 +63,8 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
                 SendRealRequest r = new SendRealRequest();
                 r.execute();
                 break;
+            default:
+                break;
         }
     }
 
@@ -73,6 +74,8 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
         super.onActivityCreated(savedInstanceState);
         myitems = (ListView) getView().findViewById(R.id.listView);
         List<iItem> items = cMenu.GetOrderedItems();
+        _items = new ArrayList<iItem>();
+        _items = items;
         if(items != null)
         {
             foodnames = new ArrayList<String>();
@@ -92,7 +95,16 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
         txttable.setText(getString(R.string.table_num) + String.valueOf(cMenu.GetTableNum()));
         txtparty.setText(getString(R.string.party_size) + String.valueOf(cMenu.GetPartySize()));
 
+        myitems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
 
+                cViewItemFragment frag = new cViewItemFragment();
+                frag.SetItem(_items.get(position));
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, frag).addToBackStack(null).commit();
+            }
+        });
     }
 
     @Override
