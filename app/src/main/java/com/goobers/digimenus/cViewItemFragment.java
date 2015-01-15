@@ -89,8 +89,12 @@ public class cViewItemFragment extends Fragment {
 
     @Override
     public void onDestroy()
+
     {
         super.onDestroy();
+        txtname = null;
+        txtdesc = null;
+        pic = null;
     }
 
 }

@@ -7,9 +7,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import Business.iItem;
 public class cFoodMenuFragment extends ListFragment
 {
     ListView menu_list = null;
+    List<iItem> items;
     public cFoodMenuFragment()
     {}
     @Override
@@ -38,7 +41,7 @@ public class cFoodMenuFragment extends ListFragment
         super.onActivityCreated(savedInstanceState);
         ((ActionBarActivity)getActivity()).getSupportActionBar().setTitle(R.string.actionbar_food);
         menu_list = getListView();
-        List<iItem> items = cMenu.GetFoodItems();
+        items = cMenu.GetFoodItems();
         List<String> foodnames = new ArrayList<String>();
         List<Double> foodcosts = new ArrayList<Double>();
         for(iItem i : items)
@@ -48,12 +51,27 @@ public class cFoodMenuFragment extends ListFragment
         }
         ListAdapter list_adapter = new ArrayAdapter<String>(getActivity(),R.layout.simple_text_layout,foodnames);
         setListAdapter(list_adapter);
+
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3)
+            {
+                String itemname = (String) menu_list.getItemAtPosition(arg2);
+                cMenu.SelectItemOnClick(itemname);
+                Toast.makeText(getActivity(), itemname + " Added to Order.", Toast.LENGTH_LONG).show();
+                return true;
+
+            }});
     }
     @Override
     public void onListItemClick(ListView l, View v, int position, long id)
     {
-        String itemname = (String) menu_list.getItemAtPosition(position);
-        cMenu.SelectItemOnClick(itemname);
+        cViewItemFragment frag = new cViewItemFragment();
+        frag.SetItem(items.get(position));
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, frag).addToBackStack(null).commit();
     }
     //TODO Add long click to view item.
     //@Override
