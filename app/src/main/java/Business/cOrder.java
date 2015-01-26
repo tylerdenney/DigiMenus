@@ -2,6 +2,7 @@ package Business;
 
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ public class cOrder
 {
     final int MAX_ITEMS = 20;
     Date date;
+    String datestr;
     List<iItem> orderitems = null;
     int partysize;
     int tablenum;
@@ -23,7 +25,9 @@ public class cOrder
         partysize = 0;
         tablenum = 0;
         totalcost = 0;
+        datestr = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
     }
+
 
     public void AddItem(iItem item)
     {
@@ -97,12 +101,30 @@ public class cOrder
 
     public void Reset()
     {
-
+        tablenum = 0;
+        partysize = 0;
+        orderitems.clear();
+        totalcost = 0;
+        datestr = "";
+        
     }
 
     public void SendRequest()
     {
-
+        String size = Integer.toString(partysize);
+        String table = Integer.toString(tablenum);
+        String cost = Double.toString(totalcost);
+        String items = "";
+        for(int i = 0; i < orderitems.size(); ++i)
+        {
+            //append string with period for last item.
+            if(i == orderitems.size() - 1)
+                items += orderitems.get(i).GetName() + ".";
+            //append string with comma for all other items.
+            else
+                items += orderitems.get(i).GetName() + ",";
+        }
+        String orderstring = "date:" + datestr + "|size:" + size + "|table" + table + "|cost:" + cost + "|order" + items;
     }
 
     public void Submit()
