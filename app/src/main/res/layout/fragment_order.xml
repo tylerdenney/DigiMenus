@@ -63,5 +63,11 @@
         android:text="Request"
         android:id="@+id/requestbutton"
         android:layout_gravity="bottom" />
-
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/submitbutton"
+        android:layout_gravity="bottom" />
 </LinearLayout>

@@ -37,6 +37,8 @@ import Business.iItem;
 public class cOrderFragment extends Fragment implements View.OnClickListener
 {
     Button requestbutton;
+    Button submitbutton;
+    private static boolean listening = false;
     private ListView myitems;
     private ArrayAdapter list_adapter;
     private ArrayList<String> foodnames;
@@ -52,6 +54,9 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
         View rootView = inflater.inflate(R.layout.fragment_order, container, false);
         requestbutton = (Button) rootView.findViewById(R.id.requestbutton);
         requestbutton.setOnClickListener(this);
+
+        submitbutton = (Button) rootView.findViewById(R.id.submitbutton);
+        submitbutton.setOnClickListener(this);
         return rootView;
     }
 
@@ -61,8 +66,20 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
         switch(v.getId())
         {
             case R.id.requestbutton:
-                SendRealRequest r = new SendRealRequest();
-                r.execute();
+                if(listening == false)
+                {
+                    listening = true;
+                    SendRealRequest r = new SendRealRequest(2);
+                    r.execute();
+                }
+                break;
+            case R.id.submitbutton:
+                if(listening == false)
+                {
+                    listening = true;
+                    SendRealRequest s = new SendRealRequest(1);
+                    s.execute();
+                }
                 break;
             default:
                 break;
@@ -142,6 +159,12 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
         Socket socket;
         BufferedReader bio;
         BufferedWriter bwo;
+        //1 is order 2 is request
+        int type;
+        public SendRealRequest(int type)
+        {
+            this.type = type;
+        }
         protected Boolean doInBackground(String... args)
         {
             boolean result = false;
@@ -156,8 +179,29 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
                     bwo = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     publishProgress(2);
                     //TODO: format data to be sent
-                    bwo.write("Hello");
-                    bwo.flush();
+
+                    if(type == 1)
+                    {
+                        String stringorder = cMenu.SubmitOrderOnClick();
+                        if(stringorder.contains("Error"))
+                        {
+                            publishProgress(4);
+                            throw(new Exception());
+
+                        }
+                        else
+                        {
+                            bwo.write("ORDER: " + stringorder);
+                            bwo.flush();
+                        }
+                    }
+                    if(type == 2)
+                    {
+                        int tablenum = cMenu.GetTableNum();
+                        String tablestring = String.valueOf(tablenum);
+                        bwo.write("REQUEST: " +tablestring);
+                        bwo.flush();
+                    }
 
                     String incoming = "";
                     boolean done = false;
@@ -174,6 +218,7 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
             catch(IOException e)
             {
                 e.printStackTrace();
+                publishProgress(3);
                 Log.i("AsyncTask", "doInBackground: IOException");
                 result = true;
             }
@@ -188,6 +233,7 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
             {
                 try
                 {
+                    listening = false;
                     bio.close();
                     bwo.close();
                     socket.close();
@@ -209,10 +255,18 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
             if(values[0] == 1)
             {
                 txtrequeststatus.setText("Message Received");
+
             }
             else if(values[0] == 2)
             {
                 txtrequeststatus.setText("Awaiting Confirmation");
+            }
+            else if(values[0] == 3)
+            {
+                txtrequeststatus.setText("Error..Could Not Connect");
+            } else if(values[0] == 4)
+            {
+                txtrequeststatus.setText("Error..Order is missing information");
             }
 
         }

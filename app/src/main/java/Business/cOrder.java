@@ -111,25 +111,29 @@ public class cOrder
 
     public void SendRequest()
     {
-        String size = Integer.toString(partysize);
-        String table = Integer.toString(tablenum);
-        String cost = Double.toString(totalcost);
-        String items = "";
-        for(int i = 0; i < orderitems.size(); ++i)
-        {
-            //append string with period for last item.
-            if(i == orderitems.size() - 1)
-                items += orderitems.get(i).GetName() + ".";
-            //append string with comma for all other items.
-            else
-                items += orderitems.get(i).GetName() + ",";
-        }
-        String orderstring = "date:" + datestr + "|size:" + size + "|table" + table + "|cost:" + cost + "|order" + items;
+
     }
 
-    public void Submit()
+    public String Submit()
     {
-
+        if(partysize != 0 && tablenum != 0 && totalcost != 0) {
+            String size = Integer.toString(partysize);
+            String table = Integer.toString(tablenum);
+            String cost = Double.toString(totalcost);
+            String items = "";
+            for (int i = 0; i < orderitems.size(); ++i) {
+                //append string with period for last item.
+                if (i == orderitems.size() - 1)
+                    items += orderitems.get(i).GetName() + ".";
+                    //append string with comma for all other items.
+                else
+                    items += orderitems.get(i).GetName() + ",";
+            }
+            String orderstring = "date " + datestr + ":size " + size + ":table " + table + ":cost " + cost + ":order " + items;
+            return orderstring;
+        }
+        else
+            return "Error";
     }
 
     public void ViewOrder()

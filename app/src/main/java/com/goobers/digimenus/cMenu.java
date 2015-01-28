@@ -162,13 +162,16 @@ public class cMenu extends Fragment
     {
         return order.GetTotalCost();
     }
-
-
     public static List<iItem> GetOrderedItems()
     {
         return order.GetItems();
     }
 
+
+    public static String SubmitOrderOnClick()
+    {
+        return order.Submit();
+    }
     public static void SendRequest()
     {
 
