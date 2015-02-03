@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
@@ -19,11 +20,14 @@ import Business.iItem;
 /**
  * Created by tyler on 1/13/2015.
  */
-public class cViewItemFragment extends Fragment {
+public class cViewItemFragment extends Fragment implements View.OnClickListener
+{
     iItem currentitem;
     private TextView txtname;
     private TextView txtdesc;
+    private TextView txtprice;
     private ImageView pic;
+    private Button addbutton;
 
 
     public cViewItemFragment() {
@@ -37,9 +41,21 @@ public class cViewItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_item, container, false);
-        //addbutton = (Button) rootView.findViewById(R.id.requestbutton);
-        //addbutton.setOnClickListener(this);
+        addbutton = (Button) rootView.findViewById(R.id.addbutton);
+        addbutton.setOnClickListener(this);
         return rootView;
+    }
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId()) {
+            case R.id.addbutton:
+                cMenu.SelectItemOnClick(currentitem.GetName());
+                Toast.makeText(getActivity(), currentitem.GetName() + " Added to Order.", Toast.LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -48,8 +64,10 @@ public class cViewItemFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         txtname = (TextView)getActivity().findViewById(R.id.item_name);
         txtdesc = (TextView)getActivity().findViewById(R.id.item_description);
+        txtprice = (TextView)getActivity().findViewById(R.id.item_cost);
         txtname.setText(currentitem.GetName());
         txtdesc.setText(currentitem.GetDescription());
+        txtprice.setText(String.valueOf(currentitem.GetCost()));
         pic = (ImageView)getActivity().findViewById(R.id.item_pic);
         pic.setImageResource(getId(currentitem.GetName(),R.drawable.class));
        // pic.setImageDrawable(GetPictureResource(currentitem.GetName()));

@@ -156,6 +156,9 @@ public class MainActivity extends ActionBarActivity implements PopupFragment.Edi
                 editing = 2;
                 SetTableNumOnClick();
                 return true;
+            case R.id.action_reset:
+                cMenu.ResetonClick();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

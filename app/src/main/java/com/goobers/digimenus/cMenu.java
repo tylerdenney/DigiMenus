@@ -172,15 +172,11 @@ public class cMenu extends Fragment
     {
         return order.Submit();
     }
-    public static void SendRequest()
+    public static void ResetonClick()
     {
-
-        //order.SendRequest();
+        order.Reset();
     }
-    public void ListenToHost()
-    {
 
-    }
 
 }
 
