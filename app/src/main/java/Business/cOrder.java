@@ -122,14 +122,16 @@ public class cOrder
             String cost = Double.toString(totalcost);
             String items = "";
             for (int i = 0; i < orderitems.size(); ++i) {
-                //append string with period for last item.
+                //dont append the comma to the end of the last item.
                 if (i == orderitems.size() - 1)
-                    items += orderitems.get(i).GetName() + ".";
+                    items += orderitems.get(i).GetName();
                     //append string with comma for all other items.
                 else
                     items += orderitems.get(i).GetName() + ",";
             }
-            String orderstring = "date " + datestr + ":size " + size + ":table " + table + ":cost " + cost + ":order " + items;
+            String orderstring = datestr + ":" + size + ":" + table + ":" + cost + ":" + items;
+           // String orderstring = "date " + datestr + ":size " + size + ":table " + table + ":cost " + cost + ":order " + items;
+
             return orderstring;
         }
         else
