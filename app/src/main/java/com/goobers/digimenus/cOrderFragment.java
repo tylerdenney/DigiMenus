@@ -170,7 +170,7 @@ public class cOrderFragment extends Fragment implements View.OnClickListener
             boolean result = false;
             try
             {
-                SocketAddress address = new InetSocketAddress("192.168.1.2", 4444);
+                SocketAddress address = new InetSocketAddress("192.168.1.2", 9999);
                 socket = new Socket();
                 socket.connect(address, 5000);//5000ms timeout
                 if(socket.isConnected())
